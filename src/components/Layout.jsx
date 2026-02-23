@@ -1,27 +1,26 @@
-import { useState } from "react";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 
 export default function Layout({ children }) {
-  const [isOpen, setIsOpen] = useState(false);
-
-
-  const toggleSidebar = () => setIsOpen(!isOpen);
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-400 via-indigo-500 to-purple-600 flex flex-col">
- 
-      <Navbar toggleSidebar={toggleSidebar} />
+    <div className="h-screen flex flex-col bg-gradient-to-br from-blue-400 via-indigo-500 to-purple-600">
 
-      <div className="flex flex-1 relative overflow-hidden">
-  
-        <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} />
+      {/* Navbar */}
+      <Navbar />
 
-    
-        <main className="flex-1 p-4 md:p-8 overflow-y-auto w-full transition-all duration-300">
+      {/* Body */}
+      <div className="flex flex-1 overflow-hidden">
+
+        {/* Sidebar */}
+        <Sidebar />
+
+        {/* Main Content Scroll Area */}
+        <div className="flex-1 p-8 overflow-y-auto">
           {children}
-        </main>
+        </div>
+
       </div>
+
     </div>
   );
 }
