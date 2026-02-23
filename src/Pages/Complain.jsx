@@ -1,10 +1,39 @@
 import Layout from "../components/Layout";
-import { database } from "../firebase";
-import { ref, push } from "firebase/database";
-import { auth } from "../firebase";
+import { database, auth } from "../firebase";
+import { ref, push, get } from "firebase/database";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 export default function Complain() {
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+
+    const checkRole = async () => {
+
+      const uid = auth.currentUser?.uid;
+
+      if (!uid) {
+        navigate("/login");
+        return;
+      }
+
+      const snapshot = await get(ref(database, "users/" + uid));
+
+      if (snapshot.exists()) {
+        const userData = snapshot.val();
+
+        if (userData.role !== "student") {
+          navigate("/admin"); // ❌ admin ko complaint page se hata do
+        }
+      }
+    };
+
+    checkRole();
+
+  }, []);
 
   const submit = (e) => {
     e.preventDefault();
@@ -28,14 +57,11 @@ export default function Complain() {
 
   return (
     <Layout>
-
       <div className="flex justify-center items-center min-h-[80vh]">
-
         <form
           onSubmit={submit}
           className="bg-white/20 backdrop-blur-2xl p-10 rounded-3xl shadow-2xl w-full max-w-md text-white space-y-6 border border-white/30"
         >
-
           <h2 className="text-3xl font-bold text-center mb-4">
             New Complaint
           </h2>
@@ -64,11 +90,8 @@ export default function Complain() {
           >
             Submit Complaint
           </button>
-
         </form>
-
       </div>
-
     </Layout>
   );
 }
