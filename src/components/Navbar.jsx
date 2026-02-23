@@ -2,9 +2,8 @@ import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { Menu } from "lucide-react"; // Agar lucide-react nahi hai toh simple "☰" use karein
 
-export default function Navbar({ toggleSidebar }) { // 👈 toggleSidebar prop liya
+export default function Navbar({ toggleSidebar }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -19,18 +18,15 @@ export default function Navbar({ toggleSidebar }) { // 👈 toggleSidebar prop l
   };
 
   return (
-    <div className="h-14 bg-white shadow flex justify-between px-6 items-center sticky top-0 z-30">
-      
-      <div className="flex items-center gap-4">
-        {/* Hamburger Menu Button - Sirf Mobile par dikhega */}
+    <div className="h-14 bg-white shadow flex justify-between px-4 md:px-6 items-center sticky top-0 z-30">
+      <div className="flex items-center gap-3">
+        {/* Hamburger Icon - Sirf Mobile par dikhega (md:hidden) */}
         <button 
           onClick={toggleSidebar} 
-          className="md:hidden p-1 text-gray-600 hover:bg-gray-100 rounded"
+          className="md:hidden p-2 text-blue-600 hover:bg-gray-100 rounded-lg text-2xl focus:outline-none"
         >
-          <Menu size={24} /> 
-          {/* Agar Icon nahi chal raha toh yahan ☰ likh dein */}
+          ☰
         </button>
-
         <h1 className="font-bold text-blue-600 text-lg md:text-xl">
           Complaint Portal
         </h1>
@@ -38,7 +34,7 @@ export default function Navbar({ toggleSidebar }) { // 👈 toggleSidebar prop l
 
       <button
         onClick={handleLogout}
-        className="bg-red-500 text-white px-4 py-1.5 rounded-lg hover:bg-red-600 transition text-sm font-medium"
+        className="bg-red-500 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-lg hover:bg-red-600 transition text-sm font-medium"
       >
         Logout
       </button>
