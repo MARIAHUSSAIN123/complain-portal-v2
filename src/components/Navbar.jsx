@@ -4,38 +4,26 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 export default function Navbar({ toggleSidebar }) {
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    signOut(auth)
-      .then(() => {
-        Swal.fire("Logged Out", "You have been logged out", "success");
-        navigate("/");
-      })
-      .catch((error) => {
-        Swal.fire("Error", error.message, "error");
-      });
-  };
+  // ... handleLogout function wahi rehne dein
 
   return (
-    <div className="h-14 bg-white shadow flex justify-between px-4 md:px-6 items-center sticky top-0 z-30">
+    <div className="h-16 bg-white shadow-md flex justify-between px-4 items-center sticky top-0 z-50">
       <div className="flex items-center gap-3">
-        {/* Hamburger Icon - Sirf Mobile par dikhega (md:hidden) */}
+        {/* Hamburger Button with explicit styling for mobile touch */}
         <button 
-          onClick={toggleSidebar} 
-          className="md:hidden p-2 text-blue-600 hover:bg-gray-100 rounded-lg text-2xl focus:outline-none"
+          onClick={(e) => {
+            e.preventDefault();
+            toggleSidebar();
+          }}
+          className="md:hidden p-2 text-blue-600 hover:bg-gray-100 rounded-lg text-3xl cursor-pointer active:scale-95 transition-all"
+          aria-label="Toggle Menu"
         >
           ☰
         </button>
-        <h1 className="font-bold text-blue-600 text-lg md:text-xl">
-          Complaint Portal
-        </h1>
+        <h1 className="font-bold text-blue-600 text-lg">Complaint Portal</h1>
       </div>
 
-      <button
-        onClick={handleLogout}
-        className="bg-red-500 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-lg hover:bg-red-600 transition text-sm font-medium"
-      >
+      <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-bold">
         Logout
       </button>
     </div>
