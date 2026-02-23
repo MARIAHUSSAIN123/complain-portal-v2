@@ -1,5 +1,6 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth, database } from "../firebase";
+import { ref, get } from "firebase/database";
 import { useNavigate, Link } from "react-router-dom";
 import Swal from "sweetalert2";
 
@@ -7,21 +8,46 @@ export default function Login() {
 
   const navigate = useNavigate();
 
-  const login = (e) => {
+  const login = async (e) => {
     e.preventDefault();
 
-    signInWithEmailAndPassword(
-      auth,
-      e.target.email.value,
-      e.target.password.value
-    )
-      .then(() => {
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+
+    try {
+
+      // 🔐 Firebase Auth Login
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      const uid = userCredential.user.uid;
+
+      // 🔥 Fetch user role from Realtime Database
+      const snapshot = await get(ref(database, "users/" + uid));
+
+      if (snapshot.exists()) {
+
+        const userData = snapshot.val();
+
         Swal.fire("Success 🎉", "Login Successful", "success");
-        navigate("/dashboard");
-      })
-      .catch((error) => {
-        Swal.fire("Error ❌", error.message, "error");
-      });
+
+        // 🎯 Role Based Navigation
+        if (userData.role === "admin") {
+          navigate("/admin");
+        } else {
+          navigate("/dashboard");
+        }
+
+      } else {
+        Swal.fire("Error ❌", "User data not found", "error");
+      }
+
+    } catch (error) {
+      Swal.fire("Error ❌", error.message, "error");
+    }
   };
 
   return (
@@ -72,6 +98,7 @@ export default function Login() {
         </p>
 
       </div>
+
     </div>
   );
 }
