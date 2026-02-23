@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function Sidebar() {
   return (
-    <div className="w-64 bg-white/20 backdrop-blur-xl min-h-screen text-white shadow-xl">
+ <div className="w-full md:w-64 bg-white/20 backdrop-blur-xl md:min-h-screen text-white shadow-xl">
 
       <div className="p-6 text-2xl font-bold border-b border-white/30">
         Complaint Portal
