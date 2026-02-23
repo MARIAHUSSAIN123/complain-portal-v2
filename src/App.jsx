@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 
-import Admin from "./pages/Admin";
-import Complain from "./pages/Complain";
-import Dashboard from "./pages/Dashboard";
-import Login from "./pages/Login";
-import MyComplain from "./pages/MyComplain";
-import SignUp from "./pages/SignUp";
+import Admin from "./Pages/Admin";
+import Complain from "./Pages/Complain";
+import Dashboard from "./Pages/Dashboard";
+import Login from "./Pages/Login";
+import MyComplain from "./Pages/MyComplain";
+import SignUp from "./Pages/SignUp";
 
 export default function App() {
   return (
