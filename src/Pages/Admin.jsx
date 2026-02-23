@@ -1,21 +1,43 @@
 import Layout from "../components/Layout";
-import { database } from "../firebase";
-import { ref, onValue, update } from "firebase/database";
+import { database, auth } from "../firebase";
+import { ref, onValue, update, get } from "firebase/database";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 export default function Admin() {
 
   const [list, setList] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
 
-    const complaintsRef = ref(database, "complaints");
+    const checkRole = async () => {
+      const uid = auth.currentUser?.uid;
 
-    onValue(complaintsRef, (snapshot) => {
+      if (!uid) {
+        navigate("/login");
+        return;
+      }
+
+      const snapshot = await get(ref(database, "users/" + uid));
 
       if (snapshot.exists()) {
+        const userData = snapshot.val();
 
+        if (userData.role !== "admin") {
+          navigate("/dashboard"); // ❌ student ko admin panel se hata do
+        }
+      }
+    };
+
+    checkRole();
+
+    const complaintsRef = ref(database, "complaints");
+
+    const unsubscribe = onValue(complaintsRef, (snapshot) => {
+
+      if (snapshot.exists()) {
         const data = snapshot.val();
 
         const formatted = Object.keys(data).map(key => ({
@@ -24,18 +46,18 @@ export default function Admin() {
         }));
 
         setList(formatted);
-
       } else {
         setList([]);
       }
 
     });
 
+    return () => unsubscribe();
+
   }, []);
 
   const updateStatus = (id, status) => {
     update(ref(database, "complaints/" + id), { status });
-
     Swal.fire("Updated ✅", "Status Updated", "success");
   };
 
@@ -56,7 +78,7 @@ export default function Admin() {
           >
 
             <p className="text-lg font-bold">
-              👤 {c.name}
+              👤 {c.userName}
             </p>
 
             <p className="mt-2">
