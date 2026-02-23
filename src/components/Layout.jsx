@@ -7,7 +7,7 @@ export default function Layout({ children }) {
 
       <Navbar />
 
-      <div className="flex">
+     <div className="flex flex-col md:flex-row">
 
         <Sidebar />
 
