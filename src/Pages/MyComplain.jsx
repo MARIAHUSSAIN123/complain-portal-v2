@@ -1,40 +1,67 @@
 import Layout from "../components/Layout";
 import { database, auth } from "../firebase";
-import { ref, onValue } from "firebase/database";
+import { ref, onValue, get } from "firebase/database";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function MyComplain() {
 
   const [list, setList] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
 
-    const complaintsRef = ref(database, "complaints");
+    const checkRoleAndFetch = async () => {
 
-    onValue(complaintsRef, (snapshot) => {
+      const uid = auth.currentUser?.uid;
+
+      if (!uid) {
+        navigate("/login");
+        return;
+      }
+
+      const snapshot = await get(ref(database, "users/" + uid));
 
       if (snapshot.exists()) {
 
-        const data = snapshot.val();
+        const userData = snapshot.val();
 
-        const myData = Object.keys(data)
-          .map(key => ({ id: key, ...data[key] }))
-          .filter(item => item.userId === auth.currentUser.uid);
+        if (userData.role !== "student") {
+          navigate("/admin"); // ❌ admin ko yahan se hata do
+          return;
+        }
 
-        setList(myData);
+        const complaintsRef = ref(database, "complaints");
 
-      } else {
-        setList([]);
+        onValue(complaintsRef, (snap) => {
+
+          if (snap.exists()) {
+
+            const data = snap.val();
+
+            const myData = Object.keys(data)
+              .map(key => ({ id: key, ...data[key] }))
+              .filter(item => item.userId === uid);
+
+            setList(myData);
+
+          } else {
+            setList([]);
+          }
+
+        });
+
       }
+    };
 
-    });
+    checkRoleAndFetch();
 
   }, []);
 
   return (
     <Layout>
 
-      <div className="min-h-screen bg-gradient-to-br from-blue-400 via-indigo-500 to-purple-600 p-6 rounded-3xl">
+      <div className="min-h-screen p-6">
 
         <h2 className="text-3xl font-bold text-white mb-6">
           My Complaints
