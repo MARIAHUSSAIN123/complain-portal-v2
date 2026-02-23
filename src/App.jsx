@@ -6,7 +6,7 @@ import Complain from "./Pages/Complain";
 import Dashboard from "./Pages/Dashboard";
 import Login from "./Pages/Login";
 import MyComplain from "./Pages/MyComplain";
-import SignUp from "./Pages/SignUp";
+import SignUp from "./Pages/Signup";
 
 export default function App() {
   return (
