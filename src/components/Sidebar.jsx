@@ -2,13 +2,13 @@ import { Link } from "react-router-dom";
 
 export default function Sidebar() {
   return (
-<div className="w-full md:w-64 bg-white/20 backdrop-blur-xl md:min-h-screen text-white shadow-xl">
+    <div className="w-full md:w-64 bg-white/20 backdrop-blur-xl text-white shadow-xl md:min-h-screen">
+
       <div className="p-6 text-2xl font-bold border-b border-white/30">
         Complaint Portal
       </div>
 
       <nav className="p-6 space-y-4">
-
         <Link to="/dashboard" className="block hover:bg-white/30 p-3 rounded-xl transition">
           Dashboard
         </Link>
@@ -24,7 +24,6 @@ export default function Sidebar() {
         <Link to="/admin" className="block hover:bg-white/30 p-3 rounded-xl transition">
           Admin
         </Link>
-
       </nav>
 
     </div>
