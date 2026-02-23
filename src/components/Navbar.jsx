@@ -20,7 +20,7 @@ export default function Navbar({ toggleSidebar }) {
   return (
     <div className="h-14 bg-white shadow flex justify-between px-4 md:px-6 items-center sticky top-0 z-30">
       <div className="flex items-center gap-3">
-        {/* Hamburger Icon - Sirf Mobile par dikhega (md:hidden) */}
+     
         <button 
           onClick={toggleSidebar} 
           className="md:hidden p-2 text-blue-600 hover:bg-gray-100 rounded-lg text-2xl focus:outline-none"
