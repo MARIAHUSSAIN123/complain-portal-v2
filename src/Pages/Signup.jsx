@@ -8,29 +8,36 @@ export default function Signup() {
 
   const navigate = useNavigate();
 
-  const register = (e) => {
+  const register = async (e) => {
     e.preventDefault();
 
     const name = e.target.name.value;
     const email = e.target.email.value;
     const password = e.target.password.value;
+    const role = e.target.role.value;   // 👈 role from dropdown
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
 
-        // 🔥 Save user name in Realtime Database
-        set(ref(database, "users/" + userCredential.user.uid), {
-          name: name,
-          email: email
-        });
+      const user = userCredential.user;
 
-        Swal.fire("Success 🎉", "Account Created", "success");
-
-        navigate("/login");
-      })
-      .catch((error) => {
-        Swal.fire("Error ❌", error.message, "error");
+      await set(ref(database, "users/" + user.uid), {
+        name: name,
+        email: email,
+        role: role   // 👈 save selected role
       });
+
+      Swal.fire("Success 🎉", "Account Created", "success");
+
+      navigate("/login");
+
+    } catch (error) {
+      Swal.fire("Error ❌", error.message, "error");
+    }
   };
 
   return (
@@ -66,6 +73,17 @@ export default function Signup() {
             className="w-full p-3 rounded-xl bg-white/80 text-black"
             required
           />
+
+          {/* 🔥 Role Selection */}
+          <select
+            name="role"
+            className="w-full p-3 rounded-xl bg-white/80 text-black"
+            required
+          >
+            <option value="">Select Role</option>
+            <option value="student">Student</option>
+            <option value="admin">Admin</option>
+          </select>
 
           <button
             type="submit"
